@@ -115,3 +115,9 @@ medium-cache:
             - group
         - require:
             - medium-repository
+
+medium-cron:
+    cron.present:
+        - user: {{ pillar.elife.deploy_user.username }}
+        - name: /srv/medium/bin/update
+        - special: '@hourly'
