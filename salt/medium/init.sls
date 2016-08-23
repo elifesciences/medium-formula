@@ -90,3 +90,16 @@ medium-propel:
         - require:
             - install-composer
             - file: medium-propel-config
+
+medium-cache:
+    file.directory:
+        - name: /srv/medium/cache
+        - user: {{ pillar.elife.webserver.username }}
+        - group: {{ pillar.elife.webserver.username }}
+        - dir_mode: 775
+        - file_mode: 664
+        - recurse:
+            - user
+            - group
+        - require:
+            - medium-repository
