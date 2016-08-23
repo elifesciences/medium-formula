@@ -84,7 +84,7 @@ medium-propel:
     cmd.run:
         - user: vagrant
         - cwd: /vagrant
-        - name: composer run sync
+        - name: composer1.0 run sync
         - require:
             - install-composer
             - file: medium-propel-config
