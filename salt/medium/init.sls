@@ -23,13 +23,6 @@ medium-repository:
         - require:
             - builder: medium-repository
 
-medium-config:
-    file.managed:
-        - name: /srv/medium/config.yml
-        - source: salt://medium/config/vagrant-config.yml
-        - require:
-            - medium-repository
-
 medium-propel-config:
     file.managed:
         - name: /srv/medium/propel.yml
@@ -48,8 +41,6 @@ composer-install:
         {% endif %}
         - cwd: /srv/medium/
         - user: {{ pillar.elife.deploy_user.username }}
-        - require:
-            - file: medium-config
 
 medium-nginx-vhost:
     file.managed:
