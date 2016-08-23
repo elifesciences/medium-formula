@@ -26,6 +26,8 @@ medium-repository:
 medium-propel-config:
     file.managed:
         - name: /srv/medium/propel.yml
+        - user: {{ pillar.elife.deploy_user.username }}
+        - group: {{ pillar.elife.deploy_user.username }}
         - source: salt://medium/config/srv-medium-propel.yml
         - require:
             - medium-repository
@@ -82,8 +84,8 @@ medium-database-access:
 
 medium-propel:
     cmd.run:
-        - user: vagrant
-        - cwd: /vagrant
+        - user: {{ pillar.elife.deploy_user.username }}
+        - cwd: /srv/medium
         - name: composer1.0 run sync
         - require:
             - install-composer
