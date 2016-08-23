@@ -26,7 +26,7 @@ medium-repository:
 medium-propel-config:
     file.managed:
         - name: /srv/medium/propel.yml
-        - source: salt://medium/config/vagrant-propel.yml
+        - source: salt://medium/config/srv-medium-propel.yml
         - require:
             - medium-repository
 
@@ -55,27 +55,30 @@ medium-nginx-vhost:
 
 medium-database:
     mysql_database.present:
-      - name: medium
-      - require:
-          - mysql-ready
+        - name: medium
+        - connection_pass: {{ pillar.elife.db_root.password }}
+        - require:
+            - mysql-ready
 
 medium-database-user:
     mysql_user.present:
-      - name: medium
-      - password: medium
-      - host: '%'
-      - require:
-          - mysql-ready
+        - name: medium
+        - password: medium
+        - connection_pass: {{ pillar.elife.db_root.password }}
+        - host: '%'
+        - require:
+            - mysql-ready
 
 medium-database-access:
     mysql_grants.present:
-      - user: medium
-      - database: medium.*
-      - grant: all privileges
-      - host: '%'
-      - require:
-          - medium-database
-          - medium-database-user
+        - user: medium
+        - connection_pass: {{ pillar.elife.db_root.password }}
+        - database: medium.*
+        - grant: all privileges
+        - host: '%'
+        - require:
+            - medium-database
+            - medium-database-user
 
 medium-propel:
     cmd.run:
@@ -83,6 +86,6 @@ medium-propel:
         - cwd: /vagrant
         - name: composer run sync
         - require:
-            - composer: medium-composer
+            - install-composer
             - file: medium-propel-config
             - pkg: php-mysql
