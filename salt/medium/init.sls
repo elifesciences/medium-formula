@@ -88,4 +88,3 @@ medium-propel:
         - require:
             - install-composer
             - file: medium-propel-config
-            - pkg: php-mysql
