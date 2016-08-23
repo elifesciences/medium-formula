@@ -29,6 +29,7 @@ medium-propel-config:
         - user: {{ pillar.elife.deploy_user.username }}
         - group: {{ pillar.elife.deploy_user.username }}
         - source: salt://medium/config/srv-medium-propel.yml
+        - template: jinja
         - require:
             - medium-repository
 
@@ -43,6 +44,8 @@ composer-install:
         {% endif %}
         - cwd: /srv/medium/
         - user: {{ pillar.elife.deploy_user.username }}
+        - require:
+            - medium-repository
 
 medium-nginx-vhost:
     file.managed:
@@ -57,27 +60,35 @@ medium-nginx-vhost:
 
 medium-database:
     mysql_database.present:
-        - name: medium
+        - name: {{ pillar.medium.db.name }}
         - connection_pass: {{ pillar.elife.db_root.password }}
         - require:
             - mysql-ready
 
 medium-database-user:
     mysql_user.present:
-        - name: medium
-        - password: medium
+        - name: {{ pillar.medium.db.user }}
+        - password: {{ pillar.medium.db.password }}
         - connection_pass: {{ pillar.elife.db_root.password }}
+        {% if pillar.elife.env in ['dev'] %}
         - host: '%'
+        {% else %}
+        - host: localhost
+        {% endif %}
         - require:
             - mysql-ready
 
 medium-database-access:
     mysql_grants.present:
-        - user: medium
+        - user: {{ pillar.medium.db.user }}
         - connection_pass: {{ pillar.elife.db_root.password }}
-        - database: medium.*
+        - database: {{ pillar.medium.db.name }}.*
         - grant: all privileges
+        {% if pillar.elife.env in ['dev'] %}
         - host: '%'
+        {% else %}
+        - host: localhost
+        {% endif %}
         - require:
             - medium-database
             - medium-database-user
@@ -90,6 +101,7 @@ medium-propel:
         - require:
             - install-composer
             - file: medium-propel-config
+            - mysql_grants: medium-database-access
 
 medium-cache:
     file.directory:

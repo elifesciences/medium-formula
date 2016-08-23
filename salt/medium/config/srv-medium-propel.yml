@@ -3,8 +3,8 @@ propel:
         connections:
             default:
                 adapter: mysql
-                dsn: mysql:host=localhost:3306;dbname=medium
-                user: medium
-                password: medium
+                dsn: mysql:host=localhost:3306;dbname={{ pillar.medium.db.name }}
+                user: {{ pillar.medium.db.user }}
+                password: {{ pillar.medium.db.password }}
                 settings:
                     charset: utf8
