@@ -9,9 +9,6 @@ medium-repository:
         - force_checkout: True
         - force_reset: True
         - fetch_pull_requests: True
-        - require:
-            - cmd: php-composer-1.0
-            - cmd: php-puli-latest
 
     file.directory:
         - name: /srv/medium
@@ -44,6 +41,8 @@ composer-install:
         - user: {{ pillar.elife.deploy_user.username }}
         - require:
             - medium-repository
+            - cmd: php-composer-1.0
+            - cmd: php-puli-latest
 
 medium-nginx-vhost:
     file.managed:
@@ -97,7 +96,7 @@ medium-propel:
         - cwd: /srv/medium
         - name: composer1.0 run sync
         - require:
-            - install-composer
+            - composer-install
             - file: medium-propel-config
             - mysql_grants: medium-database-access
 
