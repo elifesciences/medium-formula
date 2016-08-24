@@ -1,6 +1,6 @@
 medium-repository:
     builder.git_latest:
-        - name: git@github.com:elifesciences/medium.git
+        - name: https://github.com/elifesciences/medium.git
         - identity: {{ pillar.elife.projects_builder.key or '' }}
         - rev: {{ salt['elife.rev']() }}
         - branch: {{ salt['elife.branch']() }}
