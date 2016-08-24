@@ -117,7 +117,11 @@ medium-cache:
             - medium-repository
 
 medium-cron:
+{% if pillar.elife.env not in ['ci'] %}
     cron.present:
+{% else %}
+    cron.absent:
+{% endif %}
         - user: {{ pillar.elife.deploy_user.username }}
         - name: /srv/medium/bin/update
         - special: '@hourly'
