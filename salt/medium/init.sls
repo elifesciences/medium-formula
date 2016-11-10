@@ -137,8 +137,3 @@ medium-cron:
         - user: {{ pillar.elife.deploy_user.username }}
         - name: /srv/medium/bin/update
         - special: '@hourly'
-
-# test of logging failures
-fail-test:
-    cmd.run:
-        - name: exit 1
