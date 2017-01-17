@@ -129,7 +129,7 @@ medium-cache:
             - medium-repository
 
 medium-cron:
-{% if pillar.elife.env not in ['ci'] %}
+{% if pillar.elife.env not in ['dev', 'ci'] %}
     cron.present:
 {% else %}
     cron.absent:
