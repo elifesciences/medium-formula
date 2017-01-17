@@ -74,6 +74,21 @@ medium-var-logs:
         - dir_mode: 775
         - file_mode: 664
 
+syslog-ng-medium-logs:
+    file.managed:
+        - name: /etc/syslog-ng/conf.d/medium.conf
+        - source: salt://medium/config/etc-syslog-ng-conf.d-medium.conf
+        - template: jinja
+        - require:
+            - pkg: syslog-ng
+        - listen_in:
+            - service: syslog-ng
+
+logrotate-medium-logs:
+    file.managed:
+        - name: /etc/logrotate.d/medium
+        - source: salt://medium/config/etc-logrotate.d-medium
+
 medium-nginx-vhost:
     file.managed:
         - name: /etc/nginx/sites-enabled/medium.conf
