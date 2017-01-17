@@ -44,6 +44,36 @@ composer-install:
             - cmd: php-composer-1.0
             - cmd: php-puli-latest
 
+# files and directories must be readable and writable by both elife and www-data
+# they are both in the www-data group, but the g+s flag makes sure that
+# new files and directories created inside have the www-data group
+medium-var:
+    file.directory:
+        - name: /srv/medium/var
+        - user: {{ pillar.elife.webserver.username }}
+        - group: {{ pillar.elife.webserver.username }}
+        - dir_mode: 775
+        - file_mode: 664
+        - recurse:
+            - user
+            - group
+            - mode
+        - require:
+            - medium-repository
+
+    cmd.run:
+        - name: chmod -R g+s /srv/medium/var
+        - require:
+            - file: medium-var
+
+medium-var-logs:
+    file.directory:
+        - name: /srv/medium/var/logs
+        - user: {{ pillar.elife.webserver.username }}
+        - group: {{ pillar.elife.webserver.username }}
+        - dir_mode: 775
+        - file_mode: 664
+
 medium-nginx-vhost:
     file.managed:
         - name: /etc/nginx/sites-enabled/medium.conf
@@ -115,6 +145,7 @@ composer-autoload:
         - require:
             - medium-propel
 
+# TODO: move to var/
 medium-cache:
     file.directory:
         - name: /srv/medium/cache
