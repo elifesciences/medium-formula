@@ -79,12 +79,14 @@ composer-install:
             - cmd: php-puli-latest
 
 medium-var-logs:
-    file.directory:
-        - name: /srv/medium/var/logs
+    cmd.run:
+        - name: |
+            mkdir -p var/logs
+            chmod g+s var/logs
+        - cwd: /srv/medium
         - user: {{ pillar.elife.webserver.username }}
-        - group: {{ pillar.elife.webserver.username }}
-        - dir_mode: 775
-        - file_mode: 664
+        - require:
+            - medium-var
 
 syslog-ng-medium-logs:
     file.managed:
@@ -93,6 +95,7 @@ syslog-ng-medium-logs:
         - template: jinja
         - require:
             - pkg: syslog-ng
+            - medium-var-logs
         - listen_in:
             - service: syslog-ng
 
@@ -100,6 +103,8 @@ logrotate-medium-logs:
     file.managed:
         - name: /etc/logrotate.d/medium
         - source: salt://medium/config/etc-logrotate.d-medium
+        - require:
+            - medium-var-logs
 
 medium-nginx-vhost:
     file.managed:
