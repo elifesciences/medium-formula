@@ -174,6 +174,12 @@ medium-cache:
         - require:
             - medium-repository
 
+    cmd.run:
+        - name: rm -rf cache/*
+        - cwd: /srv/medium
+        - require;
+            - file: medium-cache
+
 medium-cron:
 {% if pillar.elife.env not in ['dev', 'ci'] %}
     cron.present:
