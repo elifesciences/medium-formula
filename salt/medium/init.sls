@@ -42,22 +42,12 @@ medium-var:
         - require:
             - file: medium-var
 
-# TODO: move to var/
 medium-cache:
-    #file.directory:
-    #    - name: /srv/medium/var/cache
-    #    - user: {{ pillar.elife.webserver.username }}
-    #    - group: {{ pillar.elife.webserver.username }}
-    #    - dir_mode: 775
-    #    - file_mode: 664
-    #    - recurse:
-    #        - user
-    #        - group
-    #    - require:
-    #        - medium-var
-
     cmd.run:
-        - name: composer1.0 run cache:clear
+        - name: |
+            mkdir -p var/cache
+            chmod 775 var/cache
+            composer1.0 run cache:clear
         - cwd: /srv/medium
         - require:
             - medium-var
