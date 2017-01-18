@@ -57,7 +57,7 @@ medium-cache:
             - medium-var
 
     cmd.run:
-        - name: rm -rf var/cache/*
+        - name: composer1.0 run cache:clear
         - cwd: /srv/medium
         - require:
             - file: medium-cache
