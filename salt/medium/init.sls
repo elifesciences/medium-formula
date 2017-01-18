@@ -177,7 +177,7 @@ medium-cache:
     cmd.run:
         - name: rm -rf cache/*
         - cwd: /srv/medium
-        - require;
+        - require:
             - file: medium-cache
 
 medium-cron:
