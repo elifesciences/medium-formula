@@ -20,6 +20,26 @@ medium-repository:
         - require:
             - builder: medium-repository
 
+# TODO: move to var/
+medium-cache:
+    file.directory:
+        - name: /srv/medium/cache
+        - user: {{ pillar.elife.webserver.username }}
+        - group: {{ pillar.elife.webserver.username }}
+        - dir_mode: 775
+        - file_mode: 664
+        - recurse:
+            - user
+            - group
+        - require:
+            - medium-repository
+
+    cmd.run:
+        - name: rm -rf cache/*
+        - cwd: /srv/medium
+        - require:
+            - file: medium-cache
+
 medium-propel-config:
     file.managed:
         - name: /srv/medium/propel.yml
@@ -29,6 +49,7 @@ medium-propel-config:
         - template: jinja
         - require:
             - medium-repository
+            - medium-cache
 
 composer-install:
     cmd.run:
@@ -160,25 +181,6 @@ composer-autoload:
         - require:
             - medium-propel
 
-# TODO: move to var/
-medium-cache:
-    file.directory:
-        - name: /srv/medium/cache
-        - user: {{ pillar.elife.webserver.username }}
-        - group: {{ pillar.elife.webserver.username }}
-        - dir_mode: 775
-        - file_mode: 664
-        - recurse:
-            - user
-            - group
-        - require:
-            - medium-repository
-
-    cmd.run:
-        - name: rm -rf cache/*
-        - cwd: /srv/medium
-        - require:
-            - file: medium-cache
 
 medium-cron:
 {% if pillar.elife.env not in ['dev', 'ci'] %}
