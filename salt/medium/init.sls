@@ -49,6 +49,7 @@ medium-cache:
             chmod 775 var/cache
             composer1.0 run cache:clear
         - cwd: /srv/medium
+        - user: {{ pillar.elife.webserver.username }}
         - require:
             - medium-var
 
