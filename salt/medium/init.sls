@@ -156,7 +156,11 @@ medium-propel:
     cmd.run:
         - user: {{ pillar.elife.deploy_user.username }}
         - cwd: /srv/medium
+        {% if pillar.elife.env in ['prod', 'demo', 'end2end'] %}
         - name: composer1.0 run sync
+        {% else %}
+        - name: composer1.0 run setup
+        {% endif %}
         - require:
             - composer-install
             - file: medium-propel-config
