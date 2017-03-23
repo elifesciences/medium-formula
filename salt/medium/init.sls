@@ -76,7 +76,6 @@ composer-install:
         - require:
             - medium-repository
             - cmd: php-composer-1.0
-            - cmd: php-puli-latest
 
 medium-var-logs:
     cmd.run:
