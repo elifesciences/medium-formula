@@ -47,7 +47,7 @@ medium-cache:
         - name: |
             mkdir -p var/cache
             chmod 775 var/cache
-            composer1.0 run cache:clear
+            composer run cache:clear
         - cwd: /srv/medium
         - user: {{ pillar.elife.webserver.username }}
         - require:
@@ -67,15 +67,15 @@ medium-propel-config:
 composer-install:
     cmd.run:
         {% if pillar.elife.env in ['prod', 'demo', 'end2end', 'continuumtest'] %}
-        - name: composer1.0 --no-interaction install --no-dev
+        - name: composer --no-interaction install --no-dev
         {% else %}
-        - name: composer1.0 --no-interaction install
+        - name: composer --no-interaction install
         {% endif %}
         - cwd: /srv/medium/
         - user: {{ pillar.elife.deploy_user.username }}
         - require:
             - medium-repository
-            - cmd: php-composer-1.0
+            - cmd: composer
 
 medium-var-logs:
     cmd.run:
@@ -156,9 +156,9 @@ medium-propel:
         - user: {{ pillar.elife.deploy_user.username }}
         - cwd: /srv/medium
         {% if pillar.elife.env in ['prod', 'demo', 'end2end', 'continuumtest'] %}
-        - name: composer1.0 run sync
+        - name: composer run sync
         {% else %}
-        - name: composer1.0 run setup
+        - name: composer run setup
         {% endif %}
         - require:
             - composer-install
@@ -169,11 +169,11 @@ medium-propel:
 composer-autoload:
     cmd.run:
         {% if pillar.elife.env in ['prod', 'demo', 'end2end', 'continuumtest'] %}
-        - name: composer1.0 --no-interaction dump-autoload --classmap-authoritative --no-dev
+        - name: composer --no-interaction dump-autoload --classmap-authoritative --no-dev
         {% elif pillar.elife.env in ['ci'] %}
-        - name: composer1.0 --no-interaction dump-autoload --classmap-authoritative
+        - name: composer --no-interaction dump-autoload --classmap-authoritative
         {% else %}
-        - name: composer1.0 --no-interaction dump-autoload
+        - name: composer --no-interaction dump-autoload
         {% endif %}
         - cwd: /srv/medium/
         - user: {{ pillar.elife.deploy_user.username }}
