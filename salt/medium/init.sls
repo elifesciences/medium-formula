@@ -64,6 +64,16 @@ medium-propel-config:
             - medium-repository
             - medium-cache
 
+medium-config:
+    file.managed:
+        - name: /srv/medium/config.php
+        - user: {{ pillar.elife.deploy_user.username }}
+        - group: {{ pillar.elife.deploy_user.username }}
+        - source: salt://medium/config/srv-medium-config.php
+        - template: jinja
+        - require:
+            - medium-repository
+
 composer-install:
     cmd.run:
         {% if pillar.elife.env in ['prod', 'demo', 'end2end', 'continuumtest'] %}
@@ -76,6 +86,7 @@ composer-install:
         - require:
             - medium-repository
             - cmd: composer
+            - medium-config
 
 medium-var-logs:
     cmd.run:
