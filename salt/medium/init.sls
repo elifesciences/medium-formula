@@ -201,3 +201,7 @@ medium-cron:
         - user: {{ pillar.elife.deploy_user.username }}
         - name: /srv/medium/bin/update
         - special: '@hourly'
+
+medium-additional-state-in-pr:
+    cmd.run:
+        - name: echo "should only be run on pr"
