@@ -10,13 +10,13 @@ elifePipeline {
             def instance = "pr-${prNumber}"
             def stackname = "medium--${instance}"
             try {
-                sh "/srv/builder/bldr destroy:${stackname}"
+                sh "/srv/builder/bldr ensure_destroyed:${stackname}"
                 sh "/srv/builder/bldr masterless.launch:medium,${instance}"
                 sh "/srv/builder/bldr masterless.set_versions:${stackname},medium-formula@${commit}"
                 sh "/srv/builder/bldr update:${stackname}"
                 // TODO: run smoke tests
             } finally {
-                sh "/srv/buulder/bldr destroy:${stackname}"
+                sh "/srv/buulder/bldr ensure_destroyed:${stackname}"
             }
         }
     }
