@@ -21,7 +21,7 @@ elifePipeline {
             }
         } finally {
             stage 'Cleanup', {
-                sh "/srv/buulder/bldr ensure_destroyed:${stackname}"
+                sh "/srv/builder/bldr ensure_destroyed:${stackname}"
             }
         }
     }
