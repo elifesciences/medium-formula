@@ -6,16 +6,21 @@ elifePipeline {
     }
 
     elifePullRequestOnly { prNumber ->
-        stage 'Applying to a stack', {
-            def instance = "pr-${prNumber}"
-            def stackname = "medium--${instance}"
-            try {
+        def instance = "pr-${prNumber}"
+        def stackname = "medium--${instance}"
+        try {
+            stage 'Basic stack', {
                 sh "/srv/builder/bldr ensure_destroyed:${stackname}"
                 sh "/srv/builder/bldr masterless.launch:medium,${instance}"
+            }
+
+            stage 'Applying change', {
                 sh "/srv/builder/bldr masterless.set_versions:${stackname},medium-formula@${commit}"
                 sh "/srv/builder/bldr update:${stackname}"
                 // TODO: run smoke tests
-            } finally {
+            }
+        } finally {
+            stage 'Cleanup', {
                 sh "/srv/buulder/bldr ensure_destroyed:${stackname}"
             }
         }
